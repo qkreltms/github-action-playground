@@ -1,53 +1,45 @@
-name: "Link Checker: All English"
-
-# **What it does**: Renders the content of every page and check all internal links.
-# **Why we have it**: To make sure all links connect correctly.
-# **Who does it impact**: Docs content.
-
+name: "Run Script"
+#
+# https://docs.github.com/en/actions/examples/using-scripts-to-test-your-code-on-a-runner
 on:
+  # 아래 속성 왜 필요한지?
+  # Manually running a workflow from the UI:
   workflow_dispatch:
+  pull_request:
   push:
     branches:
       - main
-  pull_request:
 
+# Modifies the default permissions granted to GITHUB_TOKEN
 permissions:
   contents: read
-  # Needed for the 'trilom/file-changes-action' action
   pull-requests: read
-
-# This allows a subsequently queued workflow run to interrupt previous runs
+# Creates a concurrency group for specific events, and uses the || operator to define fallback values. For more information, see https://docs.github.com/en/actions/using-jobs/using-concurrency"
 concurrency:
   group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  # Cancels any currently running job or workflow in the same concurrency group.
   cancel-in-progress: true
-
 jobs:
-  check-links:
-    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+  define-job-id-here:
     steps:
-      - name: Checkout
+      # 레포지토리 clone 및 접근
+      - name: Checkout-name-of-action
         uses: actions/checkout@v3
-
-      - name: Setup node
+      #  install the specified version of the Node.js
+      - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: 16.13.x
           cache: npm
-
-      - name: Install
+      - name: let's install packages
         run: npm ci
-
-      # Creates file "$/files.json", among others
-      - name: Gather files changed
-        uses: trilom/file-changes-action@a6ca26c14274c33b15e6499323aac178af06ad4b
+      - name: gather files which are changed
+        uses: trilom/file-changes-action@a6ca26c14274c33b15e6499323aac178af06ad4
         with:
           fileOutput: "json"
-
-      # For verification
-      - name: Show files changed
+      - name: let's show files that trilom created
         run: cat $HOME/files.json
-
-      - name: Link check (warnings, changed files)
+      - name: let's run link checker script (warnings, changed files)
         run: |
           ./script/rendered-content-link-checker.mjs \
             --language en \
@@ -56,7 +48,6 @@ jobs:
             --check-images \
             --verbose \
             --list $HOME/files.json
-
       - name: Link check (critical, all files)
         run: |
           ./script/rendered-content-link-checker.mjs \

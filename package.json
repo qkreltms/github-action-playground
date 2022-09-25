@@ -1,0 +1,19 @@
+{
+  "name": "github-action-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qkreltms/github-action-playground.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qkreltms/github-action-playground/issues"
+  },
+  "homepage": "https://github.com/qkreltms/github-action-playground#readme"
+}
