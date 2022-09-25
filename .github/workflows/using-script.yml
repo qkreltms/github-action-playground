@@ -1,13 +1,14 @@
 name: "Run Script"
 # https://docs.github.com/en/actions/examples/using-scripts-to-test-your-code-on-a-runner
+#
 on:
   # 아래 속성 왜 필요한지?
   # Manually running a workflow from the UI:
   workflow_dispatch:
-  pull_request:
   push:
     branches:
       - main
+  pull_request:
 
 # Modifies the default permissions granted to GITHUB_TOKEN
 permissions:
@@ -20,7 +21,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   define-job-id-here:
-    stops:
+    runs-on: ubuntu-latest
+    steps:
       # 레포지토리 clone 및 접근
       - name: Checkout-name-of-action
         uses: actions/checkout@v3
@@ -33,7 +35,7 @@ jobs:
       - name: let's install packages
         run: npm ci
       - name: gather files which are changed
-        uses: trilom/file-changes-action@a6ca26c14274c33b15e6499323aac178af06ad4
+        uses: trilom/file-changes-action@a6ca26c14274c33b15e6499323aac178af06ad4b
         with:
           fileOutput: "json"
       - name: let's show files that trilom created
