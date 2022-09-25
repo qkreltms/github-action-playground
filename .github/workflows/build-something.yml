@@ -1,0 +1,28 @@
+# https://docs.github.com/en/actions/examples/using-the-github-cli-on-a-runner
+name: Build React app
+on:
+  workflow_dispatch:
+  # The schedule event can be delayed during periods of high loads of GitHub Actions workflow runs. High load times include the start of every hour. To decrease the chance of delay, schedule your workflow to run at a different time of the hour.
+  schedule:
+    - cron: "40 19 * * *" # once a day at 19:40 UTC / 11:40 PST 에 워크플로우 작동
+  permissions:
+    contents: read
+    # 이슈 권한 획득
+    issues: write
+  jobs:
+    id-of-jobs:
+      name: build-react-app
+      if: github.repository == 'github/github-action-playground'
+      runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo's default branch
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+        node-version: 16.8.x
+        cache: npm
+      - name: Run the "npm ci" command
+        run: npm ci
+      - name: Run the "npm run build" command
+        run: npm run build
