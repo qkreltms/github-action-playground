@@ -9,20 +9,20 @@ on:
     contents: read
     # 이슈 권한 획득
     issues: write
-  jobs:
-    id-of-jobs:
-      name: build-react-app
-      if: github.repository == 'github/github-action-playground'
-      runs-on: ubuntu-latest
-    steps:
-      - name: Check out repo's default branch
-        uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-        node-version: 16.8.x
-        cache: npm
-      - name: Run the "npm ci" command
-        run: npm ci
-      - name: Run the "npm run build" command
-        run: npm run build
+jobs:
+  id-of-jobs:
+    name: build-react-app
+    if: github.repository == 'github/github-action-playground'
+    runs-on: ubuntu-latest
+  steps:
+    - name: Check out repo's default branch
+      uses: actions/checkout@v3
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+      node-version: 16.8.x
+      cache: npm
+    - name: Run the "npm ci" command
+      run: npm ci
+    - name: Run the "npm run build" command
+      run: npm run build
