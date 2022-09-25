@@ -14,7 +14,7 @@ permissions:
   pull-requests: read
 jobs:
   id-of-jobs:
-    name: build-react-app
+    # name: build-react-app
     # if: github.repository == 'qkreltms/github-action-playground'
     runs-on: ubuntu-latest
     steps:
