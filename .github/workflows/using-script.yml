@@ -21,6 +21,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   define-job-id-here:
+    runs-on: ubuntu-latest
     steps:
       # 레포지토리 clone 및 접근
       - name: Checkout-name-of-action
