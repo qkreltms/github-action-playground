@@ -1,0 +1,57 @@
+name: "Run Script"
+# https://docs.github.com/en/actions/examples/using-scripts-to-test-your-code-on-a-runner
+on:
+  # 아래 속성 왜 필요한지?
+  # Manually running a workflow from the UI:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+# Modifies the default permissions granted to GITHUB_TOKEN
+permissions:
+  contents: read
+  pull-requests: read
+# Creates a concurrency group for specific events, and uses the || operator to define fallback values. For more information, see https://docs.github.com/en/actions/using-jobs/using-concurrency"
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}"
+  # Cancels any currently running job or workflow in the same concurrency group.
+  cancel-in-progress: true
+jobs:
+  define-job-id-here:
+    stops:
+      # 레포지토리 clone 및 접근
+      - name: Checkout-name-of-action
+        uses: actions/checkout@v3
+      #  install the specified version of the Node.js
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.x
+          cache: npm
+      - name: let's install packages
+        run: npm ci
+      - name: gather files which are changed
+        uses: trilom/file-changes-action@a6ca26c14274c33b15e6499323aac178af06ad4
+        with:
+          fileOutput: "json"
+      - name: let's show files that trilom created
+        run: cat $HOME/files.json
+      - name: let's run link checker script (warnings, changed files)
+        run: |
+          ./script/rendered-content-link-checker.mjs \
+            --language en \
+            --max 100 \
+            --check-anchors \
+            --check-images \
+            --verbose \
+            --list $HOME/files.json
+      - name: Link check (critical, all files)
+        run: |
+          ./script/rendered-content-link-checker.mjs \
+            --language en \
+            --exit \
+            --verbose \
+            --check-images \
+            --level critical
