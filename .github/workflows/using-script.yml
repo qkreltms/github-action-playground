@@ -1,5 +1,4 @@
 name: "Run Script"
-#
 # https://docs.github.com/en/actions/examples/using-scripts-to-test-your-code-on-a-runner
 on:
   # 아래 속성 왜 필요한지?
@@ -34,7 +33,7 @@ jobs:
       - name: let's install packages
         run: npm ci
       - name: gather files which are changed
-        uses: trilom/file-changes-action@a6ca26c14274c33b15e6499323aac178af06ad4
+        uses: trilom/file-changes-action@a6ca26c14274c33b15e6499323aac178af06ad4b
         with:
           fileOutput: "json"
       - name: let's show files that trilom created
