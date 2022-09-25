@@ -11,8 +11,7 @@ on:
   #   - cron: "24 07 * * *" # once a day at 19:40 UTC / 11:40 PST 에 워크플로우 작동
 permissions:
   contents: read
-  # 이슈 권한 획득
-  issues: write
+  pull-requests: read
 jobs:
   id-of-jobs:
     name: build-react-app
