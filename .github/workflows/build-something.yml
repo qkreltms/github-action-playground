@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
   # The schedule event can be delayed during periods of high loads of GitHub Actions workflow runs. High load times include the start of every hour. To decrease the chance of delay, schedule your workflow to run at a different time of the hour.
   # schedule:
   #   - cron: "24 07 * * *" # once a day at 19:40 UTC / 11:40 PST 에 워크플로우 작동
