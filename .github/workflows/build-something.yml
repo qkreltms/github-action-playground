@@ -15,7 +15,7 @@ permissions:
 jobs:
   id-of-jobs:
     name: build-react-app
-    if: github.repository == 'qkreltms/github-action-playground'
+    # if: github.repository == 'qkreltms/github-action-playground'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo's default branch
