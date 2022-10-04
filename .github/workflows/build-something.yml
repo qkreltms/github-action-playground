@@ -1,0 +1,55 @@
+# https://docs.github.com/en/actions/examples/using-the-github-cli-on-a-runner
+name: Build React app
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+  # The schedule event can be delayed during periods of high loads of GitHub Actions workflow runs. High load times include the start of every hour. To decrease the chance of delay, schedule your workflow to run at a different time of the hour.
+  # schedule:
+  #   - cron: "24 07 * * *" # once a day at 19:40 UTC / 11:40 PST 에 워크플로우 작동
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  id-of-jobs:
+    # name: build-react-app
+    # if: github.repository == 'qkreltms/github-action-playground'
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Check out repo's default branch
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.8.x
+          cache: npm
+          registry-url: "https://npm.pkg.github.com/"
+          scope: "@bud-app"
+      - name: cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+      - name: Run the "npm ci" command
+        run: npm ci
+        env:
+          # https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      - name: Run the "npm run build" command
+        run: npm run build
+      - name: S3 Deploy
+        uses: Reggionick/s3-deploy@v3.2.0
+        with:
+          folder: build
+          bucket: ${{ secrets.S3_BUCKET }}
+          dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          bucket-region: ap-northeast-2
+          filesToInclude: ".*/*,*/*,**"
