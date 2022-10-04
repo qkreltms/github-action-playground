@@ -52,3 +52,4 @@ jobs:
           bucket: ${{ secrets.S3_BUCKET }}
           dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
           bucket-region: ap-northeast-2
+          filesToInclude: ".*/*,*/*,**"
